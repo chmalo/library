@@ -26,5 +26,17 @@ class ApiBaseTest extends TestCase
         $this->artisan('l5-swagger:generate')->assertSuccessful();
 
         $this->get('/api/documentation')->assertOk();
+
+        $this->get('/docs')
+            ->assertOk()
+            ->assertJsonStructure([
+                'paths' => [
+                    '/api/health',
+                    '/api/categories',
+                    '/api/categories/{category}',
+                    '/api/books',
+                    '/api/books/{book}',
+                ],
+            ]);
     }
 }
