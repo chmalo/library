@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
-class ListBooksController extends Controller
+class BooksGetController extends Controller
 {
     #[OA\Get(
         path: '/api/books',

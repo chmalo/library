@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Api\Categories;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use OpenApi\Attributes as OA;
 
-class ShowCategoryController extends Controller
+class CategoryPutController extends Controller
 {
-    #[OA\Get(
+    #[OA\Put(
         path: '/api/categories/{category}',
-        summary: 'Get a category by ID',
+        summary: 'Update a category',
         tags: ['Categories'],
         parameters: [
             new OA\Parameter(
@@ -22,10 +23,14 @@ class ShowCategoryController extends Controller
                 schema: new OA\Schema(type: 'integer')
             ),
         ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/CategoryInput')
+        ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Category details',
+                description: 'Category updated',
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', ref: '#/components/schemas/Category'),
@@ -37,10 +42,17 @@ class ShowCategoryController extends Controller
                 description: 'Category not found',
                 content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage')
             ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')
+            ),
         ]
     )]
-    public function __invoke(Category $category): CategoryResource
+    public function __invoke(UpdateCategoryRequest $request, Category $category): CategoryResource
     {
+        $category->update($request->validated());
+
         return new CategoryResource($category);
     }
 }

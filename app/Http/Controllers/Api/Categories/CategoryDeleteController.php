@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
-class DeleteCategoryController extends Controller
+class CategoryDeleteController extends Controller
 {
     #[OA\Delete(
         path: '/api/categories/{category}',

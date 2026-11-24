@@ -5,6 +5,12 @@
 - Cada endpoint de la API debe tener su propio controlador invocable (`__invoke`), agrupado por módulo en `app/Http/Controllers/Api/{Modulo}/` (por ejemplo, `Api/Books/` y `Api/Categories/`).
 - Prohibido agrupar múltiples acciones CRUD (`index`, `store`, `show`, `update`, `destroy`) en un mismo controlador.
 
+## Convención de nombres
+
+- Usar `{Recurso}{MetodoHttp}Controller`:
+  - Plural para colecciones (`BooksGetController`, `CategoriesGetController`).
+  - Singular para recurso individual (`BookGetController`, `BookPostController`, `BookPutController`, `BookDeleteController`, `HealthGetController`).
+
 ## Documentación OpenAPI obligatoria
 
 - Cada controlador debe incluir la documentación Swagger de su endpoint mediante atributos PHP 8 (`OpenApi\Attributes as OA`) sobre `__invoke` (ruta, resumen, tag, parámetros, request body y respuestas HTTP).

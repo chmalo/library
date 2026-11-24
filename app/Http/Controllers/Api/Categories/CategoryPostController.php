@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
-class CreateCategoryController extends Controller
+class CategoryPostController extends Controller
 {
     #[OA\Post(
         path: '/api/categories',

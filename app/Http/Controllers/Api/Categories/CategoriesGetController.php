@@ -8,7 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
-class ListCategoriesController extends Controller
+class CategoriesGetController extends Controller
 {
     #[OA\Get(
         path: '/api/categories',

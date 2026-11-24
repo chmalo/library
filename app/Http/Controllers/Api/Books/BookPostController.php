@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
-class CreateBookController extends Controller
+class BookPostController extends Controller
 {
     #[OA\Post(
         path: '/api/books',

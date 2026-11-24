@@ -1,45 +1,45 @@
 <?php
 
-namespace App\Http\Controllers\Api\Categories;
+namespace App\Http\Controllers\Api\Books;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateCategoryRequest;
-use App\Http\Resources\CategoryResource;
-use App\Models\Category;
+use App\Http\Requests\UpdateBookRequest;
+use App\Http\Resources\BookResource;
+use App\Models\Book;
 use OpenApi\Attributes as OA;
 
-class UpdateCategoryController extends Controller
+class BookPutController extends Controller
 {
     #[OA\Put(
-        path: '/api/categories/{category}',
-        summary: 'Update a category',
-        tags: ['Categories'],
+        path: '/api/books/{book}',
+        summary: 'Update a book',
+        tags: ['Books'],
         parameters: [
             new OA\Parameter(
-                name: 'category',
+                name: 'book',
                 in: 'path',
                 required: true,
-                description: 'Category ID',
+                description: 'Book ID',
                 schema: new OA\Schema(type: 'integer')
             ),
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CategoryInput')
+            content: new OA\JsonContent(ref: '#/components/schemas/BookInput')
         ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Category updated',
+                description: 'Book updated',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'data', ref: '#/components/schemas/Category'),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/Book'),
                     ]
                 )
             ),
             new OA\Response(
                 response: 404,
-                description: 'Category not found',
+                description: 'Book not found',
                 content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage')
             ),
             new OA\Response(
@@ -49,10 +49,10 @@ class UpdateCategoryController extends Controller
             ),
         ]
     )]
-    public function __invoke(UpdateCategoryRequest $request, Category $category): CategoryResource
+    public function __invoke(UpdateBookRequest $request, Book $book): BookResource
     {
-        $category->update($request->validated());
+        $book->update($request->validated());
 
-        return new CategoryResource($category);
+        return new BookResource($book->load('category'));
     }
 }

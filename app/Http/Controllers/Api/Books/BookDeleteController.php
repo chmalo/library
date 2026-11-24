@@ -7,7 +7,7 @@ use App\Models\Book;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
-class DeleteBookController extends Controller
+class BookDeleteController extends Controller
 {
     #[OA\Delete(
         path: '/api/books/{book}',

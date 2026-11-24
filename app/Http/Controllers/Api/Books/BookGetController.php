@@ -7,7 +7,7 @@ use App\Http\Resources\BookResource;
 use App\Models\Book;
 use OpenApi\Attributes as OA;
 
-class ShowBookController extends Controller
+class BookGetController extends Controller
 {
     #[OA\Get(
         path: '/api/books/{book}',

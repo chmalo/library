@@ -1,32 +1,32 @@
 <?php
 
-use App\Http\Controllers\Api\Books\CreateBookController;
-use App\Http\Controllers\Api\Books\DeleteBookController;
-use App\Http\Controllers\Api\Books\ListBooksController;
-use App\Http\Controllers\Api\Books\ShowBookController;
-use App\Http\Controllers\Api\Books\UpdateBookController;
-use App\Http\Controllers\Api\Categories\CreateCategoryController;
-use App\Http\Controllers\Api\Categories\DeleteCategoryController;
-use App\Http\Controllers\Api\Categories\ListCategoriesController;
-use App\Http\Controllers\Api\Categories\ShowCategoryController;
-use App\Http\Controllers\Api\Categories\UpdateCategoryController;
-use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\Books\BookDeleteController;
+use App\Http\Controllers\Api\Books\BookGetController;
+use App\Http\Controllers\Api\Books\BookPostController;
+use App\Http\Controllers\Api\Books\BookPutController;
+use App\Http\Controllers\Api\Books\BooksGetController;
+use App\Http\Controllers\Api\Categories\CategoriesGetController;
+use App\Http\Controllers\Api\Categories\CategoryDeleteController;
+use App\Http\Controllers\Api\Categories\CategoryGetController;
+use App\Http\Controllers\Api\Categories\CategoryPostController;
+use App\Http\Controllers\Api\Categories\CategoryPutController;
+use App\Http\Controllers\Api\HealthGetController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/health', HealthController::class);
+Route::get('/health', HealthGetController::class);
 
 Route::prefix('categories')->group(function (): void {
-    Route::get('/', ListCategoriesController::class);
-    Route::post('/', CreateCategoryController::class);
-    Route::get('/{category}', ShowCategoryController::class);
-    Route::put('/{category}', UpdateCategoryController::class);
-    Route::delete('/{category}', DeleteCategoryController::class);
+    Route::get('/', CategoriesGetController::class);
+    Route::post('/', CategoryPostController::class);
+    Route::get('/{category}', CategoryGetController::class);
+    Route::put('/{category}', CategoryPutController::class);
+    Route::delete('/{category}', CategoryDeleteController::class);
 });
 
 Route::prefix('books')->group(function (): void {
-    Route::get('/', ListBooksController::class);
-    Route::post('/', CreateBookController::class);
-    Route::get('/{book}', ShowBookController::class);
-    Route::put('/{book}', UpdateBookController::class);
-    Route::delete('/{book}', DeleteBookController::class);
+    Route::get('/', BooksGetController::class);
+    Route::post('/', BookPostController::class);
+    Route::get('/{book}', BookGetController::class);
+    Route::put('/{book}', BookPutController::class);
+    Route::delete('/{book}', BookDeleteController::class);
 });
