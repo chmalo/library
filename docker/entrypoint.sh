@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-if [ "${1:-}" = "php" ] && [ "${2:-}" = "artisan" ] && [ "${3:-}" = "serve" ]; then
+if [ "${1:-}" = "php" ] && [ "${2:-}" = "-S" ]; then
     if [ ! -f .env ]; then
         cp .env.example .env
     fi
@@ -15,6 +15,7 @@ if [ "${1:-}" = "php" ] && [ "${2:-}" = "artisan" ] && [ "${3:-}" = "serve" ]; t
     fi
 
     php artisan migrate --force
+    cd /app/public
 fi
 
 exec "$@"

@@ -28,4 +28,4 @@ USER ${UID}:${GID}
 EXPOSE 8000
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "/app/public", "/app/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"]
