@@ -15,6 +15,7 @@ if [ "${1:-}" = "php" ] && [ "${2:-}" = "-S" ]; then
     fi
 
     php artisan migrate --force
+    php artisan l5-swagger:generate
     cd /app/public
 fi
 
