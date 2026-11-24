@@ -29,9 +29,18 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
 ### Comandos útiles (Docker)
 - Ejecutar tests: `docker compose exec app php artisan test`
 - Ejecutar migraciones: `docker compose exec app php artisan migrate`
+- Ejecutar seeders: `docker compose exec app php artisan db:seed`
 - Ver logs: `docker compose logs -f app`
 - Detener entorno: `docker compose down`
 - Puertos configurables por entorno: `APP_PORT` (default `8000`) y `DOCKER_DB_PORT` (default `5435`).
+
+## Documentación de la API (Swagger)
+
+- **Swagger UI:** `http://localhost:8000/api/documentation`
+- **OpenAPI JSON:** `http://localhost:8000/docs`
+- **Regenerar especificación:**
+  - Docker: `docker compose exec app php artisan l5-swagger:generate`
+  - Nativa: `php artisan l5-swagger:generate`
 
 ## Opción 2: Instalación nativa (local sin Docker)
 
