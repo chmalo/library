@@ -45,7 +45,8 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
 ## Opción 2: Instalación nativa (local sin Docker)
 
 ### Requisitos
-- PHP `>= 8.3` con extensiones: `ctype`, `curl`, `dom`, `fileinfo`, `filter`, `hash`, `mbstring`, `openssl`, `pcre`, `pdo`, `pdo_sqlite`, `session`, `tokenizer`, `xml`
+- PHP `>= 8.3` con extensiones: `ctype`, `curl`, `dom`, `fileinfo`, `filter`, `hash`, `mbstring`, `openssl`, `pcre`, `pdo`, `pdo_pgsql`, `pgsql`, `pdo_sqlite`, `session`, `tokenizer`, `xml`
+- PostgreSQL `16` (o `>= 15`)
 - Composer `2.x`
 
 ### Pasos
@@ -53,17 +54,18 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
    ```bash
    composer install
    ```
-2. Crear archivo de entorno y clave de aplicación:
+2. Crear archivo de entorno, configurar PostgreSQL y generar clave de aplicación:
    ```bash
    cp .env.example .env
    php artisan key:generate
    ```
-3. Crear la base SQLite por defecto y ejecutar migraciones:
+   Asegurar que la base de datos `library` exista en PostgreSQL y que `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` en `.env` coincidan con tu instancia local.
+3. Ejecutar migraciones, seeders y generar la documentación Swagger:
    ```bash
-   touch database/database.sqlite
    php artisan migrate
+   php artisan db:seed
+   php artisan l5-swagger:generate
    ```
-   *(Opcional: para usar PostgreSQL o MySQL, configurar `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` en `.env`.)*
 4. Iniciar el servidor local:
    ```bash
    php artisan serve
@@ -72,4 +74,4 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
 
 ### Verificación (nativa)
 - Salud de la aplicación: `curl -i http://127.0.0.1:8000/up`
-- Suite de tests (SQLite en memoria): `php artisan test`
+- Suite de tests: `php artisan test`

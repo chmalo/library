@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
-class HealthController extends Controller
+class HealthGetController extends Controller
 {
     #[OA\Get(
         path: '/api/health',
