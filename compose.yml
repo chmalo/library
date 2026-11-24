@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: library_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DOCKER_DB_DATABASE:-library}
+      POSTGRES_USER: ${DOCKER_DB_USERNAME:-library}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD:-library}
+    ports:
+      - "127.0.0.1:${DOCKER_DB_PORT:-5435}:5432"
+    volumes:
+      - library_pgdata:/var/lib/postgresql/data
+    networks:
+      - library_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DOCKER_DB_USERNAME:-library} -d ${DOCKER_DB_DATABASE:-library}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    container_name: library_app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      APP_URL: http://localhost:${APP_PORT:-8000}
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${DOCKER_DB_DATABASE:-library}
+      DB_USERNAME: ${DOCKER_DB_USERNAME:-library}
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:-library}
+    volumes:
+      - .:/app
+      - library_vendor:/app/vendor
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - library_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8000/up > /dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+networks:
+  library_net:
+    driver: bridge
+
+volumes:
+  library_pgdata:
+  library_vendor:
