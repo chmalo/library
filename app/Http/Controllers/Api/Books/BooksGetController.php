@@ -46,7 +46,7 @@ class BooksGetController extends Controller
     {
         $categoryId = $request->query('category');
 
-        if (empty($categoryId)) {
+        if ($categoryId === null || $categoryId === '') {
             return BookResource::collection(($this->searcher)());
         }
 
