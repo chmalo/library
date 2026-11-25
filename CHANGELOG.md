@@ -13,7 +13,7 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 ## [2026-11-25]
 
 ### Paso 10 — Casos de uso `Books`, tests unitarios por clase y controladores cableados
-- **PR:** [#10](https://github.com/chmalo/library/pull/10) (`OPEN`)
+- **PR:** [#10](https://github.com/chmalo/library/pull/10) (`MERGED`, merge commit `c17cf15`)
 - **Commits:** `c6c9594`, `75628a0`
 - **Cambios:**
   - Capa `src/Books/Application/` en PHP puro: `BooksSearcher`, `BookFinder`, `BookCreator` (+ `CreateBookDto`), `BookUpdater` (+ `UpdateBookDto`) y `BookDeleter`.
