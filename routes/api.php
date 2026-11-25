@@ -26,7 +26,7 @@ Route::prefix('categories')->group(function (): void {
 Route::prefix('books')->group(function (): void {
     Route::get('/', BooksGetController::class);
     Route::post('/', BookPostController::class);
-    Route::get('/{book}', BookGetController::class);
-    Route::put('/{book}', BookPutController::class);
-    Route::delete('/{book}', BookDeleteController::class);
+    Route::get('/{book}', BookGetController::class)->whereNumber('book');
+    Route::put('/{book}', BookPutController::class)->whereNumber('book');
+    Route::delete('/{book}', BookDeleteController::class)->whereNumber('book');
 });
