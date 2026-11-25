@@ -46,14 +46,14 @@ class BooksGetController extends Controller
     {
         $categoryId = $request->query('category');
 
-        if ($categoryId !== null && $categoryId !== '') {
-            if (! ctype_digit((string) $categoryId)) {
-                return BookResource::collection([]);
-            }
-
-            return BookResource::collection(($this->searcher)((int) $categoryId));
+        if (empty($categoryId)) {
+            return BookResource::collection(($this->searcher)());
         }
 
-        return BookResource::collection(($this->searcher)());
+        if (! ctype_digit((string) $categoryId)) {
+            return BookResource::collection([]);
+        }
+
+        return BookResource::collection(($this->searcher)((int) $categoryId));
     }
 }
