@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Resources\CategoryResource;
-use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
+use Src\Categories\Application\Create\CategoryCreator;
+use Src\Categories\Application\Create\CreateCategoryDto;
 
 class CategoryPostController extends Controller
 {
+    public function __construct(private readonly CategoryCreator $creator) {}
+
     #[OA\Post(
         path: '/api/categories',
         summary: 'Create a category',
@@ -39,7 +42,9 @@ class CategoryPostController extends Controller
     )]
     public function __invoke(StoreCategoryRequest $request): JsonResponse
     {
-        $category = Category::query()->create($request->validated());
+        $category = ($this->creator)(new CreateCategoryDto(
+            name: $request->validated('name'),
+        ));
 
         return (new CategoryResource($category))
             ->response()

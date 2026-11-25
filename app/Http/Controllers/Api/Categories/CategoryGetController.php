@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api\Categories;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
-use App\Models\Category;
 use OpenApi\Attributes as OA;
+use Src\Categories\Application\Find\CategoryFinder;
 
 class CategoryGetController extends Controller
 {
+    public function __construct(private readonly CategoryFinder $finder) {}
+
     #[OA\Get(
         path: '/api/categories/{category}',
         summary: 'Get a category by ID',
@@ -39,8 +41,8 @@ class CategoryGetController extends Controller
             ),
         ]
     )]
-    public function __invoke(Category $category): CategoryResource
+    public function __invoke(int $category): CategoryResource
     {
-        return new CategoryResource($category);
+        return new CategoryResource(($this->finder)($category));
     }
 }

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api\Categories;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
-use App\Models\Category;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
+use Src\Categories\Application\Search\CategoriesSearcher;
 
 class CategoriesGetController extends Controller
 {
+    public function __construct(private readonly CategoriesSearcher $searcher) {}
+
     #[OA\Get(
         path: '/api/categories',
         summary: 'List all categories',
@@ -32,6 +34,6 @@ class CategoriesGetController extends Controller
     )]
     public function __invoke(): AnonymousResourceCollection
     {
-        return CategoryResource::collection(Category::query()->orderBy('id')->get());
+        return CategoryResource::collection(($this->searcher)());
     }
 }

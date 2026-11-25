@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Api\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
-use App\Models\Category;
 use OpenApi\Attributes as OA;
+use Src\Categories\Application\Update\CategoryUpdater;
+use Src\Categories\Application\Update\UpdateCategoryDto;
 
 class CategoryPutController extends Controller
 {
+    public function __construct(private readonly CategoryUpdater $updater) {}
+
     #[OA\Put(
         path: '/api/categories/{category}',
         summary: 'Update a category',
@@ -49,10 +52,13 @@ class CategoryPutController extends Controller
             ),
         ]
     )]
-    public function __invoke(UpdateCategoryRequest $request, Category $category): CategoryResource
+    public function __invoke(UpdateCategoryRequest $request, int $category): CategoryResource
     {
-        $category->update($request->validated());
+        $updated = ($this->updater)(new UpdateCategoryDto(
+            id: $category,
+            name: $request->validated('name'),
+        ));
 
-        return new CategoryResource($category);
+        return new CategoryResource($updated);
     }
 }

@@ -18,9 +18,9 @@ Route::get('/health', HealthGetController::class);
 Route::prefix('categories')->group(function (): void {
     Route::get('/', CategoriesGetController::class);
     Route::post('/', CategoryPostController::class);
-    Route::get('/{category}', CategoryGetController::class);
-    Route::put('/{category}', CategoryPutController::class);
-    Route::delete('/{category}', CategoryDeleteController::class);
+    Route::get('/{category}', CategoryGetController::class)->whereNumber('category');
+    Route::put('/{category}', CategoryPutController::class)->whereNumber('category');
+    Route::delete('/{category}', CategoryDeleteController::class)->whereNumber('category');
 });
 
 Route::prefix('books')->group(function (): void {

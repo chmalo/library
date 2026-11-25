@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api\Categories;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
+use Src\Categories\Application\Delete\CategoryDeleter;
 
 class CategoryDeleteController extends Controller
 {
+    public function __construct(private readonly CategoryDeleter $deleter) {}
+
     #[OA\Delete(
         path: '/api/categories/{category}',
         summary: 'Delete a category',
@@ -40,16 +41,9 @@ class CategoryDeleteController extends Controller
             ),
         ]
     )]
-    public function __invoke(Category $category): Response|JsonResponse
+    public function __invoke(int $category): Response
     {
-        if ($category->books()->exists()) {
-            return response()->json(
-                ['message' => 'Cannot delete category with associated books.'],
-                Response::HTTP_CONFLICT
-            );
-        }
-
-        $category->delete();
+        ($this->deleter)($category);
 
         return response()->noContent();
     }
