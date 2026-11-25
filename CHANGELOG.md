@@ -5,9 +5,36 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 ## Estado actual
 
 - **Stack:** Laravel 13, PHP 8.4 (Docker + ejecución nativa), PostgreSQL 16, Swagger OpenAPI 3.0 (`darkaonline/l5-swagger` `11.4.1` / `zircote/swagger-php` `7.9.0`).
-- **Calidad verificada:** `20 passed (91 assertions)` en PHPUnit, `43 files PASS` en Laravel Pint, 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
+- **Arquitectura:** Hexagonal por módulos (`Categories`, `Books`) bajo `Src\` (`src/`) con capas `Domain/`, `Application/` e `Infrastructure/`.
+- **Calidad verificada:** `45 passed (192 assertions)` en PHPUnit (10 clases de Unit tests aisladas + Feature tests), `78 files PASS` en Laravel Pint, 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
 
 ---
+
+## [2026-11-25]
+
+### Paso 10 — Casos de uso `Books`, tests unitarios por clase y controladores cableados
+- **PR:** [#10](https://github.com/chmalo/library/pull/10) (`OPEN`)
+- **Commits:** `c6c9594`, `75628a0`
+- **Cambios:**
+  - Capa `src/Books/Application/` en PHP puro: `BooksSearcher`, `BookFinder`, `BookCreator` (+ `CreateBookDto`), `BookUpdater` (+ `UpdateBookDto`) y `BookDeleter`.
+  - Contrato estricto de dominio en `app/Http/Resources/BookResource.php`, restricción numérica `whereNumber('book')` en `routes/api.php` y cableado de los 5 controladores en `app/Http/Controllers/Api/Books/` con `try/catch` explícito y cláusulas de guarda con `empty` en `BooksGetController`.
+  - 5 clases de tests unitarios aislados en `tests/Unit/Books/` (`BooksSearcherTest`, `BookFinderTest`, `BookCreatorTest`, `BookUpdaterTest`, `BookDeleterTest`).
+
+### Paso 9 — Casos de uso `Categories`, tests unitarios por clase, Swagger a nivel de clase y `try/catch` explícito
+- **PR:** [#9](https://github.com/chmalo/library/pull/9) (`MERGED`)
+- **Commits:** `1fd8aeb`, `59c65ae`, `d2a455e`, `81475bb`
+- **Cambios:**
+  - Capa `src/Categories/Application/` en PHP puro: `CategoriesSearcher`, `CategoryFinder`, `CategoryCreator` (+ `CreateCategoryDto`), `CategoryUpdater` (+ `UpdateCategoryDto`) y `CategoryDeleter`.
+  - Atributos OpenAPI `#[OA\...]` movidos arriba de la declaración de cada clase en los 11 controladores y regla documentada en `app/Http/Controllers/AGENTS.md`.
+  - Contrato estricto de dominio en `app/Http/Resources/CategoryResource.php`, restricción numérica `whereNumber('category')` en `routes/api.php` y manejo explícito de excepciones con `try/catch` en los controladores (sin handlers de dominio en `bootstrap/app.php`).
+  - 5 clases de tests unitarios aislados en `tests/Unit/Categories/` (`CategoriesSearcherTest`, `CategoryFinderTest`, `CategoryCreatorTest`, `CategoryUpdaterTest`, `CategoryDeleterTest`) y convención de 1 clase por caso de uso en `tests/AGENTS.md`.
+
+### Paso 8 — Capas `Domain` e `Infrastructure` para `Categories` y `Books` + DI bindings
+- **PR:** [#8](https://github.com/chmalo/library/pull/8) (`MERGED`)
+- **Commit:** `7885ad7`
+- **Cambios:**
+  - Entidades puras (`Src\Categories\Domain\Category`, `Src\Books\Domain\Book`), puertos (`CategoryRepository`, `BookRepository`) y excepciones de dominio (`CategoryNotFound`, `CategoryAlreadyExists`, `CategoryHasBooks`, `BookNotFound`).
+  - Adaptadores Eloquent (`EloquentCategoryRepository`, `EloquentBookRepository`), bindings DI en `app/Providers/AppServiceProvider.php`, convenciones en `src/AGENTS.md` y tests de integración en `tests/Feature/EloquentRepositoriesTest.php`.
 
 ## [2026-11-24]
 
@@ -78,6 +105,4 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 
 ## Próximos pasos pendientes
 
-- Implementar módulos hexagonales dentro de `src/` (`Books/` y `Categories/` con capas `Domain/`, `Application/` e `Infrastructure/`) y delegar la lógica de aplicación a casos de uso desde los controladores.
-- Agregar tests unitarios de casos de uso en `tests/Unit/` utilizando mocks o fakes de los puertos definidos en `Domain/`.
 - *(Opcional)* Aislar la base de datos de testing en `phpunit.xml` para que `php artisan test` dentro de Docker no utilice `DB_CONNECTION=pgsql` sobre la base de desarrollo.
