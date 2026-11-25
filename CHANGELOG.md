@@ -13,7 +13,8 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 ## [2026-11-25]
 
 ### Paso 12 — Interfaz Web ligera (`GET /`) conectada a la API REST
-- **PR:** [#12](https://github.com/chmalo/library/pull/12) (`OPEN`)
+- **PR:** [#12](https://github.com/chmalo/library/pull/12) (`MERGED`, merge commit `24df6f9`)
+- **Commit:** `2697e9b`
 - **Cambios:**
   - Vista Blade (`resources/views/library.blade.php`), estilos CSS propios (`public/css/library.css`) y cliente ES module con `fetch` (`public/js/library.js`) sirviendo el CRUD completo de libros y categorías desde `GET /` sin dependencias JS adicionales ni build step.
   - Manejo accesible de modales nativos `<dialog>`, pestañas con navegación por teclado, tablas responsivas con container queries y errores de validación `422` / conflicto `409` en pantalla.
