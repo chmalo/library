@@ -13,6 +13,11 @@ class LibraryFrontendTest extends TestCase
             ->assertViewIs('library')
             ->assertSee('/css/library.css', false)
             ->assertSee('/js/library.js', false)
-            ->assertSee('/api/documentation', false);
+            ->assertSee('/api/documentation', false)
+            ->assertSee('name="color-scheme"', false)
+            ->assertSee('closedby="any"', false)
+            ->assertSee('id="theme-toggle-btn"', false)
+            ->assertSee('id="view-grid-btn"', false)
+            ->assertSee('id="books-search"', false);
     }
 }

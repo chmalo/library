@@ -6,11 +6,19 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 
 - **Stack:** Laravel 13, PHP 8.4 (Docker + ejecución nativa), PostgreSQL 16, Swagger OpenAPI 3.0 (`darkaonline/l5-swagger` `11.4.1` / `zircote/swagger-php` `7.9.0`).
 - **Arquitectura:** Hexagonal por módulos (`Categories`, `Books`) bajo `Src\` (`src/`) con capas `Domain/`, `Application/` e `Infrastructure/`.
-- **Calidad verificada:** `44 passed (197 assertions)` en PHPUnit (10 clases de Unit tests aisladas + Feature tests en SQLite `:memory:`), `77 files PASS` en Laravel Pint, 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
+- **Calidad verificada:** `44 passed (202 assertions)` en PHPUnit (10 clases de Unit tests aisladas + Feature tests en SQLite `:memory:`), 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
 
 ---
 
 ## [2026-11-25]
+
+### Paso 13 — Rediseño Editorial Contemporáneo del Frontend (`GET /`)
+- **PR:** [#13](https://github.com/chmalo/library/pull/13) (`OPEN`, rama `feat/modernize-frontend-ui`)
+- **Cambios:**
+  - Rediseño visual completo de `resources/views/library.blade.php` y `public/css/library.css` bajo dirección **Editorial Contemporáneo** (superficies piedra/folio, acento verde biblioteca, tipografía `Onest` y cero pasos de build), con soporte nativo `color-scheme: light dark`, `light-dark()` y fallbacks progresivos.
+  - Barra superior pegajosa con navegación segmentada, contadores `tabular-nums`, selector de vista **Tarjetas / Tabla** persistido en `localStorage`, búsqueda instantánea en vivo (`#books-search`), riel de chips por categoría conectado a `GET /api/books?category=`, esqueletos de carga, iconos SVG consistentes y columna de conteo + acceso rápido `"Ver libros"` en Categorías.
+  - Toggle claro/oscuro de dos estados sin FOUC (`dark-mode-toggle`), modales `<dialog closedby="any">` con animaciones de entrada/salida `@starting-style` + `transition-behavior: allow-discrete` y fallbacks para navegadores sin `closedBy` ni `overlay` (`public/js/library.js`).
+  - Ampliación de `tests/Feature/LibraryFrontendTest.php` para verificar meta `color-scheme`, `closedby="any"`, toggle de tema, selector de vista y búsqueda.
 
 ### Paso 12 — Interfaz Web ligera (`GET /`) conectada a la API REST
 - **PR:** [#12](https://github.com/chmalo/library/pull/12) (`MERGED`, merge commit `24df6f9`)
