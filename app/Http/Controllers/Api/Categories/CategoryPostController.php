@@ -11,35 +11,35 @@ use OpenApi\Attributes as OA;
 use Src\Categories\Application\Create\CategoryCreator;
 use Src\Categories\Application\Create\CreateCategoryDto;
 
+#[OA\Post(
+    path: '/api/categories',
+    summary: 'Create a category',
+    tags: ['Categories'],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: '#/components/schemas/CategoryInput')
+    ),
+    responses: [
+        new OA\Response(
+            response: 201,
+            description: 'Category created',
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'data', ref: '#/components/schemas/Category'),
+                ]
+            )
+        ),
+        new OA\Response(
+            response: 422,
+            description: 'Validation error',
+            content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')
+        ),
+    ]
+)]
 class CategoryPostController extends Controller
 {
     public function __construct(private readonly CategoryCreator $creator) {}
 
-    #[OA\Post(
-        path: '/api/categories',
-        summary: 'Create a category',
-        tags: ['Categories'],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CategoryInput')
-        ),
-        responses: [
-            new OA\Response(
-                response: 201,
-                description: 'Category created',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'data', ref: '#/components/schemas/Category'),
-                    ]
-                )
-            ),
-            new OA\Response(
-                response: 422,
-                description: 'Validation error',
-                content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')
-            ),
-        ]
-    )]
     public function __invoke(StoreCategoryRequest $request): JsonResponse
     {
         $category = ($this->creator)(new CreateCategoryDto(
