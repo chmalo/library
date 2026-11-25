@@ -6,14 +6,22 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 
 - **Stack:** Laravel 13, PHP 8.4 (Docker + ejecución nativa), PostgreSQL 16, Swagger OpenAPI 3.0 (`darkaonline/l5-swagger` `11.4.1` / `zircote/swagger-php` `7.9.0`).
 - **Arquitectura:** Hexagonal por módulos (`Categories`, `Books`) bajo `Src\` (`src/`) con capas `Domain/`, `Application/` e `Infrastructure/`.
-- **Calidad verificada:** `43 passed (192 assertions)` en PHPUnit (10 clases de Unit tests aisladas + Feature tests en SQLite `:memory:`), `76 files PASS` en Laravel Pint, 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
+- **Calidad verificada:** `44 passed (197 assertions)` en PHPUnit (10 clases de Unit tests aisladas + Feature tests en SQLite `:memory:`), `77 files PASS` en Laravel Pint, 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
 
 ---
 
 ## [2026-11-25]
 
+### Paso 12 — Interfaz Web ligera (`GET /`) conectada a la API REST
+- **PR:** [#12](https://github.com/chmalo/library/pull/12) (`OPEN`)
+- **Cambios:**
+  - Vista Blade (`resources/views/library.blade.php`), estilos CSS propios (`public/css/library.css`) y cliente ES module con `fetch` (`public/js/library.js`) sirviendo el CRUD completo de libros y categorías desde `GET /` sin dependencias JS adicionales ni build step.
+  - Manejo accesible de modales nativos `<dialog>`, pestañas con navegación por teclado, tablas responsivas con container queries y errores de validación `422` / conflicto `409` en pantalla.
+  - Test de integración en `tests/Feature/LibraryFrontendTest.php` y enlace documentado en `README.md`.
+
 ### Paso 11 — Aislamiento de base de testing, pulido de filtro y documentación final
-- **PR:** [#11](https://github.com/chmalo/library/pull/11) (`OPEN`)
+- **PR:** [#11](https://github.com/chmalo/library/pull/11) (`MERGED`, merge commit `ae83ffd`)
+- **Commit:** `c829a10`
 - **Cambios:**
   - Aislamiento de PHPUnit en Docker mediante `<server name="DB_CONNECTION" value="sqlite" force="true"/>` y `<server name="DB_DATABASE" value=":memory:" force="true"/>` en `phpunit.xml`, preservando los datos seeded en PostgreSQL.
   - Refinamiento de cláusula de guarda en `BooksGetController` (`$categoryId === null || $categoryId === ''`) para manejar `?category=0` explícitamente, validado en `tests/Feature/BookApiTest.php`.

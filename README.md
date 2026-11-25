@@ -40,6 +40,7 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
 
 ## Documentación de la API (Swagger)
 
+- **Interfaz Web:** `http://localhost:8000` (consume directamente los endpoints REST)
 - **Prefijo estándar `/api`:** todos los endpoints REST siguen la convención de Laravel bajo `/api` (`/api/books`, `/api/categories`, `/api/health`).
 - **Swagger UI:** `http://localhost:8000/api/documentation`
 - **OpenAPI JSON:** `http://localhost:8000/docs`
