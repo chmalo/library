@@ -13,7 +13,8 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 ## [2026-11-25]
 
 ### Paso 13 — Rediseño Editorial Contemporáneo del Frontend (`GET /`)
-- **PR:** [#13](https://github.com/chmalo/library/pull/13) (`OPEN`, rama `feat/modernize-frontend-ui`)
+- **PR:** [#13](https://github.com/chmalo/library/pull/13) (`MERGED`, merge commit `37ae282`)
+- **Commit:** `41aed38`
 - **Cambios:**
   - Rediseño visual completo de `resources/views/library.blade.php` y `public/css/library.css` bajo dirección **Editorial Contemporáneo** (superficies piedra/folio, acento verde biblioteca, tipografía `Onest` y cero pasos de build), con soporte nativo `color-scheme: light dark`, `light-dark()` y fallbacks progresivos.
   - Barra superior pegajosa con navegación segmentada, contadores `tabular-nums`, selector de vista **Tarjetas / Tabla** persistido en `localStorage`, búsqueda instantánea en vivo (`#books-search`), riel de chips por categoría conectado a `GET /api/books?category=`, esqueletos de carga, iconos SVG consistentes y columna de conteo + acceso rápido `"Ver libros"` en Categorías.
