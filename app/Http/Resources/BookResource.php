@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
-use Src\Categories\Infrastructure\Persistence\EloquentCategoryRepository;
 
 #[OA\Schema(
     schema: 'Book',
@@ -38,20 +37,17 @@ class BookResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'author' => $this->author,
-            'description' => $this->description,
-            'published_year' => $this->published_year,
-            'category_id' => $this->category_id,
-            'category' => $this->whenLoaded(
-                'category',
-                fn () => $this->category
-                    ? new CategoryResource(EloquentCategoryRepository::toDomain($this->category))
-                    : null,
-            ),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'id' => $this->resource->id(),
+            'title' => $this->resource->title(),
+            'author' => $this->resource->author(),
+            'description' => $this->resource->description(),
+            'published_year' => $this->resource->publishedYear(),
+            'category_id' => $this->resource->categoryId(),
+            'category' => $this->resource->category() !== null
+                ? new CategoryResource($this->resource->category())
+                : null,
+            'created_at' => $this->resource->createdAt()?->format('Y-m-d\TH:i:s.u\Z'),
+            'updated_at' => $this->resource->updatedAt()?->format('Y-m-d\TH:i:s.u\Z'),
         ];
     }
 }

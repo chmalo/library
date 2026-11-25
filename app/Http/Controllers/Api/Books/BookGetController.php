@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\Books;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BookResource;
-use App\Models\Book;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
+use Src\Books\Application\Find\BookFinder;
+use Src\Books\Domain\Exceptions\BookNotFound;
 
 #[OA\Get(
     path: '/api/books/{book}',
@@ -39,8 +42,14 @@ use OpenApi\Attributes as OA;
 )]
 class BookGetController extends Controller
 {
-    public function __invoke(Book $book): BookResource
+    public function __construct(private readonly BookFinder $finder) {}
+
+    public function __invoke(int $book): BookResource|JsonResponse
     {
-        return new BookResource($book->load('category'));
+        try {
+            return new BookResource(($this->finder)($book));
+        } catch (BookNotFound $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        }
     }
 }

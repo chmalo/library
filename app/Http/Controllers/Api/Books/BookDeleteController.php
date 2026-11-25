@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Books;
 
 use App\Http\Controllers\Controller;
-use App\Models\Book;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
+use Src\Books\Application\Delete\BookDeleter;
+use Src\Books\Domain\Exceptions\BookNotFound;
 
 #[OA\Delete(
     path: '/api/books/{book}',
@@ -34,10 +36,16 @@ use OpenApi\Attributes as OA;
 )]
 class BookDeleteController extends Controller
 {
-    public function __invoke(Book $book): Response
-    {
-        $book->delete();
+    public function __construct(private readonly BookDeleter $deleter) {}
 
-        return response()->noContent();
+    public function __invoke(int $book): Response|JsonResponse
+    {
+        try {
+            ($this->deleter)($book);
+
+            return response()->noContent();
+        } catch (BookNotFound $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        }
     }
 }
