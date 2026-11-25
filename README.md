@@ -11,7 +11,7 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
 ### Pasos
 1. Clonar el repositorio y entrar al directorio:
    ```bash
-   git clone <url-del-repositorio> library
+   git clone https://github.com/chmalo/library.git library
    cd library
    ```
 2. Construir e iniciar los contenedores (`app` + `db` PostgreSQL 16):
@@ -65,7 +65,7 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
    cp .env.example .env
    php artisan key:generate
    ```
-   Asegurar que la base de datos `library` exista en PostgreSQL y que `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` en `.env` coincidan con tu instancia local.
+   Crear la base de datos `library` en PostgreSQL (por ejemplo, `createdb library`) y asegurar que `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` en `.env` coincidan con tu instancia local.
 3. Ejecutar migraciones, seeders y generar la documentación Swagger:
    ```bash
    php artisan migrate
