@@ -18,8 +18,12 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
    ```bash
    docker compose up -d --build
    ```
-   El entrypoint crea `.env`, instala dependencias si faltan, genera `APP_KEY` y ejecuta las migraciones automáticamente.
-3. Verificar el estado:
+   El entrypoint crea `.env`, instala dependencias si faltan, genera `APP_KEY`, ejecuta las migraciones y genera la documentación Swagger automáticamente.
+3. Cargar datos de ejemplo iniciales (5 categorías y 10 libros):
+   ```bash
+   docker compose exec app php artisan db:seed
+   ```
+4. Verificar el estado:
    ```bash
    docker compose ps
    curl -i http://localhost:8000/up
@@ -36,6 +40,7 @@ Base del proyecto en Laravel 13 (`PHP 8.4` / `>= 8.3`). Contexto y requisitos de
 
 ## Documentación de la API (Swagger)
 
+- **Prefijo estándar `/api`:** todos los endpoints REST siguen la convención de Laravel bajo `/api` (`/api/books`, `/api/categories`, `/api/health`).
 - **Swagger UI:** `http://localhost:8000/api/documentation`
 - **OpenAPI JSON:** `http://localhost:8000/docs`
 - **Regenerar especificación:**

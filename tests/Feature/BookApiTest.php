@@ -30,6 +30,10 @@ class BookApiTest extends TestCase
         $this->getJson('/api/books?category=999999')
             ->assertOk()
             ->assertJsonCount(0, 'data');
+
+        $this->getJson('/api/books?category=0')
+            ->assertOk()
+            ->assertJsonCount(0, 'data');
     }
 
     public function test_can_show_book_and_returns_not_found_for_missing_book(): void

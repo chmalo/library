@@ -6,11 +6,25 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 
 - **Stack:** Laravel 13, PHP 8.4 (Docker + ejecución nativa), PostgreSQL 16, Swagger OpenAPI 3.0 (`darkaonline/l5-swagger` `11.4.1` / `zircote/swagger-php` `7.9.0`).
 - **Arquitectura:** Hexagonal por módulos (`Categories`, `Books`) bajo `Src\` (`src/`) con capas `Domain/`, `Application/` e `Infrastructure/`.
-- **Calidad verificada:** `45 passed (192 assertions)` en PHPUnit (10 clases de Unit tests aisladas + Feature tests), `78 files PASS` en Laravel Pint, 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
+- **Calidad verificada:** `43 passed (192 assertions)` en PHPUnit (10 clases de Unit tests aisladas + Feature tests en SQLite `:memory:`), `76 files PASS` en Laravel Pint, 5 paths y 6 esquemas OpenAPI activos en `/api/documentation` y `/docs`.
 
 ---
 
 ## [2026-11-25]
+
+### Paso 11 — Aislamiento de base de testing, pulido de filtro y documentación final
+- **PR:** [#11](https://github.com/chmalo/library/pull/11) (`OPEN`)
+- **Cambios:**
+  - Aislamiento de PHPUnit en Docker mediante `<server name="DB_CONNECTION" value="sqlite" force="true"/>` y `<server name="DB_DATABASE" value=":memory:" force="true"/>` en `phpunit.xml`, preservando los datos seeded en PostgreSQL.
+  - Refinamiento de cláusula de guarda en `BooksGetController` (`$categoryId === null || $categoryId === ''`) para manejar `?category=0` explícitamente, validado en `tests/Feature/BookApiTest.php`.
+  - Documentación del prefijo estándar `/api` y del comando `db:seed` en `README.md`.
+  - Eliminación de los tests boilerplate `ExampleTest.php` y archivo local sin trackear `package-lock.json`.
+
+### Paso 7 — Trazabilidad inicial (`CHANGELOG.md`)
+- **PR:** [#7](https://github.com/chmalo/library/pull/7) (`MERGED`, merge commit `dd93c38`)
+- **Commits:** `e6e308b`, `57732b2`, `401cae3`
+- **Cambios:**
+  - Creación y actualización de `CHANGELOG.md` con trazabilidad cronológica completa de commits y PRs (#1–#10).
 
 ### Paso 10 — Casos de uso `Books`, tests unitarios por clase y controladores cableados
 - **PR:** [#10](https://github.com/chmalo/library/pull/10) (`MERGED`, merge commit `c17cf15`)
@@ -103,6 +117,6 @@ Trazabilidad completa de las decisiones, cambios, commits y Pull Requests realiz
 
 ---
 
-## Próximos pasos pendientes
+## Estado de entrega
 
-- *(Opcional)* Aislar la base de datos de testing en `phpunit.xml` para que `php artisan test` dentro de Docker no utilice `DB_CONNECTION=pgsql` sobre la base de desarrollo.
+- Todos los requisitos funcionales, validaciones, reglas de negocio y criterios de evaluación de `PRUEBA_TECNICA.md` están implementados, documentados en Swagger y cubiertos por tests Unit + Feature aislados.
