@@ -15,3 +15,9 @@ Cada módulo de negocio vive en su propio directorio en PascalCase (por ejemplo 
 `Infrastructure` → `Application` → `Domain`
 
 Las dependencias apuntan siempre hacia adentro; `Domain` no debe importar ni conocer nada de `Application`, `Infrastructure` o `App\`.
+
+## Convenciones de nombres
+
+- **Casos de uso (`Application/`):** `{Entidad}{Accion}` (`BookCreator`, `BookUpdater`, `BookDeleter`, `BookFinder`, `BooksSearcher`).
+- **DTOs (`Application/`):** `{Accion}{Entidad}Dto` (`CreateBookDto`, `UpdateBookDto`, `CreateCategoryDto`, `UpdateCategoryDto`).
+- **Repositorios:** `{Entidad}Repository` en `Domain/` y `Eloquent{Entidad}Repository` en `Infrastructure/Persistence/`.
