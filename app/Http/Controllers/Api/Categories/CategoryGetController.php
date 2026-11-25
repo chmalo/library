@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\Categories;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 use Src\Categories\Application\Find\CategoryFinder;
+use Src\Categories\Domain\Exceptions\CategoryNotFound;
 
 #[OA\Get(
     path: '/api/categories/{category}',
@@ -41,8 +44,12 @@ class CategoryGetController extends Controller
 {
     public function __construct(private readonly CategoryFinder $finder) {}
 
-    public function __invoke(int $category): CategoryResource
+    public function __invoke(int $category): CategoryResource|JsonResponse
     {
-        return new CategoryResource(($this->finder)($category));
+        try {
+            return new CategoryResource(($this->finder)($category));
+        } catch (CategoryNotFound $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        }
     }
 }

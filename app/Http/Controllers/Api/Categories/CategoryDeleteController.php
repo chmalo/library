@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\Categories;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 use Src\Categories\Application\Delete\CategoryDeleter;
+use Src\Categories\Domain\Exceptions\CategoryHasBooks;
+use Src\Categories\Domain\Exceptions\CategoryNotFound;
 
 #[OA\Delete(
     path: '/api/categories/{category}',
@@ -41,10 +44,16 @@ class CategoryDeleteController extends Controller
 {
     public function __construct(private readonly CategoryDeleter $deleter) {}
 
-    public function __invoke(int $category): Response
+    public function __invoke(int $category): Response|JsonResponse
     {
-        ($this->deleter)($category);
+        try {
+            ($this->deleter)($category);
 
-        return response()->noContent();
+            return response()->noContent();
+        } catch (CategoryNotFound $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        } catch (CategoryHasBooks $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_CONFLICT);
+        }
     }
 }

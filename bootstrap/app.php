@@ -4,10 +4,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Src\Categories\Domain\Exceptions\CategoryAlreadyExists;
-use Src\Categories\Domain\Exceptions\CategoryHasBooks;
-use Src\Categories\Domain\Exceptions\CategoryNotFound;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,17 +16,5 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
-        );
-
-        $exceptions->render(
-            fn (CategoryNotFound $e) => response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND),
-        );
-
-        $exceptions->render(
-            fn (CategoryHasBooks $e) => response()->json(['message' => $e->getMessage()], Response::HTTP_CONFLICT),
-        );
-
-        $exceptions->render(
-            fn (CategoryAlreadyExists $e) => response()->json(['message' => $e->getMessage()], Response::HTTP_CONFLICT),
         );
     })->create();

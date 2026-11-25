@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Api\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 use Src\Categories\Application\Update\CategoryUpdater;
 use Src\Categories\Application\Update\UpdateCategoryDto;
+use Src\Categories\Domain\Exceptions\CategoryAlreadyExists;
+use Src\Categories\Domain\Exceptions\CategoryNotFound;
 
 #[OA\Put(
     path: '/api/categories/{category}',
@@ -52,13 +56,19 @@ class CategoryPutController extends Controller
 {
     public function __construct(private readonly CategoryUpdater $updater) {}
 
-    public function __invoke(UpdateCategoryRequest $request, int $category): CategoryResource
+    public function __invoke(UpdateCategoryRequest $request, int $category): CategoryResource|JsonResponse
     {
-        $updated = ($this->updater)(new UpdateCategoryDto(
-            id: $category,
-            name: $request->validated('name'),
-        ));
+        try {
+            $updated = ($this->updater)(new UpdateCategoryDto(
+                id: $category,
+                name: $request->validated('name'),
+            ));
 
-        return new CategoryResource($updated);
+            return new CategoryResource($updated);
+        } catch (CategoryNotFound $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        } catch (CategoryAlreadyExists $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_CONFLICT);
+        }
     }
 }

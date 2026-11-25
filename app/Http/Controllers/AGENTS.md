@@ -21,3 +21,4 @@
 - Validar la entrada con Form Requests (`app/Http/Requests/`).
 - Formatear la salida con API Resources (`app/Http/Resources/`).
 - Mantener los controladores sin lógica de negocio compleja; delegar a los casos de uso en `src/` cuando existan.
+- Capturar excepciones de dominio explícitamente con `try/catch` en cada controlador para traducirlas a la respuesta HTTP adecuada (`404`, `409`, etc.), sin registrar excepciones de dominio en `bootstrap/app.php`.

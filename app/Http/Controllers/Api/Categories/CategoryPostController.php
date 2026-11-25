@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 use Src\Categories\Application\Create\CategoryCreator;
 use Src\Categories\Application\Create\CreateCategoryDto;
+use Src\Categories\Domain\Exceptions\CategoryAlreadyExists;
 
 #[OA\Post(
     path: '/api/categories',
@@ -42,12 +43,16 @@ class CategoryPostController extends Controller
 
     public function __invoke(StoreCategoryRequest $request): JsonResponse
     {
-        $category = ($this->creator)(new CreateCategoryDto(
-            name: $request->validated('name'),
-        ));
+        try {
+            $category = ($this->creator)(new CreateCategoryDto(
+                name: $request->validated('name'),
+            ));
 
-        return (new CategoryResource($category))
-            ->response()
-            ->setStatusCode(Response::HTTP_CREATED);
+            return (new CategoryResource($category))
+                ->response()
+                ->setStatusCode(Response::HTTP_CREATED);
+        } catch (CategoryAlreadyExists $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_CONFLICT);
+        }
     }
 }
