@@ -3,54 +3,57 @@
 namespace App\Http\Controllers\Api\Categories;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
+use Src\Categories\Application\Delete\CategoryDeleter;
+use Src\Categories\Domain\Exceptions\CategoryHasBooks;
+use Src\Categories\Domain\Exceptions\CategoryNotFound;
 
+#[OA\Delete(
+    path: '/api/categories/{category}',
+    summary: 'Delete a category',
+    tags: ['Categories'],
+    parameters: [
+        new OA\Parameter(
+            name: 'category',
+            in: 'path',
+            required: true,
+            description: 'Category ID',
+            schema: new OA\Schema(type: 'integer')
+        ),
+    ],
+    responses: [
+        new OA\Response(
+            response: 204,
+            description: 'Category deleted'
+        ),
+        new OA\Response(
+            response: 404,
+            description: 'Category not found',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage')
+        ),
+        new OA\Response(
+            response: 409,
+            description: 'Category has associated books',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage')
+        ),
+    ]
+)]
 class CategoryDeleteController extends Controller
 {
-    #[OA\Delete(
-        path: '/api/categories/{category}',
-        summary: 'Delete a category',
-        tags: ['Categories'],
-        parameters: [
-            new OA\Parameter(
-                name: 'category',
-                in: 'path',
-                required: true,
-                description: 'Category ID',
-                schema: new OA\Schema(type: 'integer')
-            ),
-        ],
-        responses: [
-            new OA\Response(
-                response: 204,
-                description: 'Category deleted'
-            ),
-            new OA\Response(
-                response: 404,
-                description: 'Category not found',
-                content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage')
-            ),
-            new OA\Response(
-                response: 409,
-                description: 'Category has associated books',
-                content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage')
-            ),
-        ]
-    )]
-    public function __invoke(Category $category): Response|JsonResponse
+    public function __construct(private readonly CategoryDeleter $deleter) {}
+
+    public function __invoke(int $category): Response|JsonResponse
     {
-        if ($category->books()->exists()) {
-            return response()->json(
-                ['message' => 'Cannot delete category with associated books.'],
-                Response::HTTP_CONFLICT
-            );
+        try {
+            ($this->deleter)($category);
+
+            return response()->noContent();
+        } catch (CategoryNotFound $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        } catch (CategoryHasBooks $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_CONFLICT);
         }
-
-        $category->delete();
-
-        return response()->noContent();
     }
 }
