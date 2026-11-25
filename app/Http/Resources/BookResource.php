@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
+use Src\Categories\Infrastructure\Persistence\EloquentCategoryRepository;
 
 #[OA\Schema(
     schema: 'Book',
@@ -43,7 +44,12 @@ class BookResource extends JsonResource
             'description' => $this->description,
             'published_year' => $this->published_year,
             'category_id' => $this->category_id,
-            'category' => new CategoryResource($this->whenLoaded('category')),
+            'category' => $this->whenLoaded(
+                'category',
+                fn () => $this->category
+                    ? new CategoryResource(EloquentCategoryRepository::toDomain($this->category))
+                    : null,
+            ),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
